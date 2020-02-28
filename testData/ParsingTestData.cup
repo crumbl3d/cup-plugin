@@ -4,8 +4,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-
-
 action code {:
     public Map<String, GregorianCalendar> ipDateMap = new HashMap<String, GregorianCalendar>(); // Map qui lie Un Ip a une date de début
     public Map<String, Long> ipDureeMap = new HashMap<String, Long>(); // Map qui lie un Ip à une durée de session
@@ -36,23 +34,25 @@ terminal NUMERIQUE;
 non terminal beg,l;
 non terminal String po;
 
+non terminal astTest;
+
 start with beg;
 
 /*------debut-------*/
 
 mois 	::= JAN {: RESULT = 0; :}
-		| FEV {: RESULT = 1; :}
-		| MAR {: RESULT = 2; :}
-		| AVR {: RESULT = 3; :}
-		| MAI {: RESULT = 4; :}
-		| JUIN {: RESULT = 5; :}
-		| JUIL {: RESULT = 6; :}
-		| AOU {: RESULT = 7; :}
-		| SEP {: RESULT = 8; :}
-		| OCT {: RESULT = 9; :}
-		| NOV {: RESULT = 10; :}
-		| DEC {: RESULT = 11; :}
-		;
+        | FEV {: RESULT = 1; :}
+        | MAR {: RESULT = 2; :}
+        | AVR {: RESULT = 3; :}
+        | MAI {: RESULT = 4; :}
+        | JUIN {: RESULT = 5; :}
+        | JUIL {: RESULT = 6; :}
+        | AOU {: RESULT = 7; :}
+        | SEP {: RESULT = 8; :}
+        | OCT {: RESULT = 9; :}
+        | NOV {: RESULT = 10; :}
+        | DEC {: RESULT = 11; :}
+        ;
 
 
 
@@ -80,7 +80,7 @@ beg         ::= l  {:
                                 System.out.println();
                                 System.out.println("Il y a eu " + nbSession + " sessions dans le fichier de log");
                     :}
-          ;
+              ;
 
 l           ::= IP:i timestamp:d STR NUMERIQUE NUMERIQUE l  {:
 
@@ -106,15 +106,19 @@ l           ::= IP:i timestamp:d STR NUMERIQUE NUMERIQUE l  {:
                                     ipDateMap.put(i, d);
                                 }
                 :}
-            | // Ou rien
-                ;
+              | // Ou rien
+              ;
 
 
 
 timestamp	::= CO:a NUMERIQUE:jour SL:b mois:mois SL:c NUMERIQUE:annee DP:d NUMERIQUE:heure DP:e NUMERIQUE:minute DP:f NUMERIQUE:seconde DECAL:g CF:h {:
                 RESULT = new GregorianCalendar(annee, mois, jour, heure, minute, seconde);
                 :}
-    		;
+              ;
 
+astTest		::= (January) JAN
+              | (February) FEB
+              | MAR // no ast class name
+              ;
 
 /*------fin--------*/

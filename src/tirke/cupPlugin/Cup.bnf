@@ -11,12 +11,9 @@
     psiImplPackage = "tirke.cupPlugin.psi.impl"
     psiImplUtilClass = "tirke.cupPlugin.psi.impl.CupPsiImplUtil"
 
-
     elementTypeHolderClass = "tirke.cupPlugin.psi.CupTypes"
     elementTypeClass = "tirke.cupPlugin.psi.CupElementType"
     tokenTypeClass = "tirke.cupPlugin.psi.CupTokenType"
-
-
 
     tokens = [
 
@@ -29,6 +26,8 @@
     RIGHTI = ">"
     LEFTCUPBRACES = "{:"
     RIGHTCUPBRACES = ":}"
+    LEFTPAREN = "("
+    RIGHTPAREN = ")"
     DOT = "."
     QM = "?"
     SEMI = ";"
@@ -76,7 +75,6 @@
 
 }
 
-
 cupSpec                 ::=  initialDeclaration codeParts* symbols* precedences* startWith? production*
 
 initialDeclaration      ::= packageDeclaration? importDeclaration* classNameDeclaration?
@@ -90,12 +88,9 @@ parserCode              ::= 'parser' 'code' java_code ';'?
 initCode                ::= 'init' 'with' java_code ';'?
 scanCode                ::= 'scan' 'with' java_code ';'?
 
-
 symbols                 ::= ( 'terminal' | 'non' 'terminal' | 'nonterminal' )
                             ( typeId symbolDefinition (',' symbolDefinition)*
                             | symbolDefinition (',' symbolDefinition)* )  ';' {pin = 1}
-
-//private symbols_recover   ::= !('terminal' | 'non' | 'nonterminal')
 
 /* Quick hack for diamonds type */
 typeId                  ::= qualifiedName typeArguments?
@@ -106,26 +101,21 @@ typeArgument            ::=  qualifiedName
 symbolDefinition        ::= identifier {implements = "tirke.cupPlugin.psi.CupNamedElement"
                                        extends = "tirke.cupPlugin.psi.impl.CupNamedElementImpl"}
 
-
-
-
 precedences             ::= 'precedence' ('left' | 'right' | 'nonassoc') termNameList {pin = 1}
 
 startWith               ::= 'start' 'with' identifier ';' {pin = 1}
 
-
 production              ::= symbol_id '::=' rhs ('|' rhs)* ';' {pin = 1}
-rhs                     ::= prod_part* ['%prec' symbol_id]
+rhs                     ::= [ ast_class_id ] prod_part* ['%prec' symbol_id]
+ast_class_id            ::= '(' identifier ')'
 prod_part               ::= symbol_id (':' label_id)?
                         |   java_code
 
 symbol_id               ::= identifier { methods = [getReference] }
 label_id                ::= identifier
 
-
 java_code               ::= '{:' JAVA* ':}' {implements= "com.intellij.psi.PsiLanguageInjectionHost"
                                              mixin = "tirke.cupPlugin.psi.impl.CupJavaImpl"}
 
 termNameList            ::= identifier (',' identifier)* ';'
 qualifiedName           ::= identifier ('.' identifier)*
-

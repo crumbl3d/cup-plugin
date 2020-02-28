@@ -1,17 +1,24 @@
 <idea-plugin>
   <id>tirke.cupPlugin</id>
   <name>Cup Support</name>
-  <version>1.2</version>
+  <version>1.2_ast</version>
   <vendor email="tschersach@gmail.com" url="https://github.com/Tirke">Schersach Thomas</vendor>
 
   <description><![CDATA[
-      Java CUP file support
+      Java CUP file support with added AST extension support
     ]]></description>
 
   <change-notes>
     <![CDATA[
 
     <hr>
+
+    <div>
+        <b>1.2_ast</b>
+        <ul>
+            <li>Added AST extension support</li>
+        </ul>
+    </div>
 
     <div>
         <b>1.2</b>

@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import tirke.cupPlugin.highlighting.CupSyntaxHighlighter;
+import tirke.cupPlugin.psi.CupAstClassId;
 import tirke.cupPlugin.psi.CupLabelId;
 import tirke.cupPlugin.psi.CupSymbolId;
 import tirke.cupPlugin.psi.CupVisitor;
@@ -47,7 +48,12 @@ public class CupAnnotator implements Annotator {
         } else {
           setHighlighting(o, holder, CupSyntaxHighlighter.NON_TERM_ID);
         }
+      }
 
+      @Override
+      public void visitAstClassId(@NotNull CupAstClassId o) {
+        super.visitAstClassId(o);
+        setHighlighting(o, holder, CupSyntaxHighlighter.CLASS_ID);
       }
     });
   }

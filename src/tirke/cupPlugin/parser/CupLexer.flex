@@ -1,4 +1,4 @@
-package tirke.cupPlugin;
+package tirke.cupPlugin.parser;
 import com.intellij.lexer.*;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.TokenType;
@@ -17,17 +17,14 @@ import static tirke.cupPlugin.psi.CupTypes.*;
 
 %state OPT_JAVA_CODE
 
-
-
 LineTerminator = \r|\n|\r\n
 WhiteSpace = [ \t]
 AnySpace = {LineTerminator} | {WhiteSpace} | [\f]
 
-IDENTIFIER=[a-zA-Z_0-9]+
+Identifier = [a-zA-Z_0-9]+
 
-
-LINE_COMMENT = "//".*
-BLOCK_COMMENT = "/*" ~"*/"
+Line_Comment = "//".*
+Block_Comment = "/*" ~"*/"
 
 %%
 <YYINITIAL> {
@@ -38,6 +35,8 @@ BLOCK_COMMENT = "/*" ~"*/"
   ","                { return COMMA; }
   "{:"               { yybegin(OPT_JAVA_CODE); return  LEFTCUPBRACES; }
   ":}"               { return RIGHTCUPBRACES; }
+  "("                { return LEFTPAREN; }
+  ")"                { return RIGHTPAREN; }
   "."                { return DOT; }
   ";"                { return SEMI; }
   "*"                { return STAR; }
@@ -68,9 +67,9 @@ BLOCK_COMMENT = "/*" ~"*/"
   "JAVA_CODE"        { return JAVA_CODE; }
 
 
-  {IDENTIFIER}       { return IDENTIFIER; }
-  {BLOCK_COMMENT}    { return BLOCK_COMMENT; }
-  {LINE_COMMENT}     { return LINE_COMMENT; }
+  {Identifier}       { return IDENTIFIER; }
+  {Block_Comment}    { return BLOCK_COMMENT; }
+  {Line_Comment}     { return LINE_COMMENT; }
 
   //Special
 

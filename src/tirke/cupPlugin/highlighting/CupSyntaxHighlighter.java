@@ -38,6 +38,8 @@ import tirke.cupPlugin.psi.CupTypes;
  */
 public class CupSyntaxHighlighter extends SyntaxHighlighterBase {
 
+  public static final TextAttributesKey CLASS_ID = createTextAttributesKey("AST_CLASS_ID",
+          DefaultLanguageHighlighterColors.CLASS_NAME);
   public static final TextAttributesKey ILLEGAL = createTextAttributesKey("CUP_ILLEGAL",
       HighlighterColors.BAD_CHARACTER);
   public static final TextAttributesKey LINE_COMMENT = createTextAttributesKey("CUP_LINE_COMMENT",
@@ -95,14 +97,15 @@ public class CupSyntaxHighlighter extends SyntaxHighlighterBase {
       return pack(BLOCK_COMMENT);
     } else if (tokenType.equals(TokenType.BAD_CHARACTER)) {
       return pack(ILLEGAL);
+    } else if (tokenType.equals(CupTypes.AST_CLASS_ID)) {
+      return pack(CLASS_ID);
     } else if (KEYWORDS.contains(tokenType)) {
       return pack(KEYWORD);
     } else if (tokenType.equals(CupTypes.COMMA)) {
       return pack(COMMA);
     } else if (tokenType.equals(CupTypes.SEMI)) {
       return pack(SEMI);
-    } else if (tokenType.equals(CupTypes.CCEQ) || tokenType.equals(CupTypes.BAR) || tokenType
-        .equals(CupTypes.COLON)) {
+    } else if (tokenType.equals(CupTypes.CCEQ) || tokenType.equals(CupTypes.BAR) || tokenType.equals(CupTypes.COLON)) {
       return pack(PUNCTUATION);
     }
     return EMPTY;

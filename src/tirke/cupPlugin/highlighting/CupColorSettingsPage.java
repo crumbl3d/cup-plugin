@@ -1,5 +1,6 @@
 package tirke.cupPlugin.highlighting;
 
+import static tirke.cupPlugin.highlighting.CupSyntaxHighlighter.CLASS_ID;
 import static tirke.cupPlugin.highlighting.CupSyntaxHighlighter.BLOCK_COMMENT;
 import static tirke.cupPlugin.highlighting.CupSyntaxHighlighter.COMMA;
 import static tirke.cupPlugin.highlighting.CupSyntaxHighlighter.ILLEGAL;
@@ -29,6 +30,7 @@ import tirke.cupPlugin.icons.CupIcons;
 public class CupColorSettingsPage implements ColorSettingsPage {
 
   private static final AttributesDescriptor[] ATTRS = new AttributesDescriptor[]{
+      new AttributesDescriptor("AST Class identifier", CLASS_ID),
       new AttributesDescriptor("Illegal character", ILLEGAL),
       new AttributesDescriptor("Line Comment", LINE_COMMENT),
       new AttributesDescriptor("Block Comment", BLOCK_COMMENT),
@@ -80,14 +82,18 @@ public class CupColorSettingsPage implements ColorSettingsPage {
         "init with {: scanner.init();              :}; \n" +
         "scan with {: return scanner.next_token(); :}; \n" +
         "\n" +
-        "terminal           PLUS, MINUS;\n" +
+        "/* block comment */" +
+        "\n" +
+        "terminal           PLUS, MINUS, TIMES;\n" +
         "\n" +
         "non terminal Integer    expr;\n" +
         "\n" +
         "precedence left PLUS,MINUS;\n" +
-        "<nt>expr</nt>      ::= <nt>expr</nt> <t>PLUS</t> <nt>expr</nt> \n" +
-        "            | <nt>expr</nt>:<l>e</l> <t>MINUS</t> <nt>expr</nt>  \n" +
-        "\t    ;"
+        "<nt>expr</nt>      ::= <c>(AddExpr)</c> <nt>expr</nt> <t>PLUS</t> <nt>expr</nt> \n" +
+        "            | <c>(SubExpr)</c> <nt>expr</nt>:<l>e</l> <t>MINUS</t> <nt>expr</nt>  \n" +
+        "            | <nt>expr</nt>:<l>e</l> <t>TIMES</t> <nt>expr</nt> // no AST class identifier \n" +
+        "            ;\n" +
+        "$ // invalid character"
         ;
   }
 
@@ -95,6 +101,7 @@ public class CupColorSettingsPage implements ColorSettingsPage {
   @Override
   public Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
     Map<String, TextAttributesKey> map = new THashMap<>();
+    map.put("c", CLASS_ID);
     map.put("l", LABEL_ID);
     map.put("nt", NON_TERM_ID);
     map.put("t", TERM_ID);
